@@ -2,6 +2,7 @@ import argparse
 import time
 import logging
 import monitor_units
+from waggle.plugin import Plugin
 
 class SystemMonitor:
     def __init__(self, monitoring_units=None):
@@ -13,16 +14,15 @@ class SystemMonitor:
             metrics.update(unit.process())
         return metrics
 
-    def publish_metrics(self, metrics):
-        logging.info("Publishing metrics:")
+    def publish_metrics(self, plugin, metrics):
         for key, value in metrics.items():
             if isinstance(value, dict):
                 for sub_key, sub_value in value.items():
-                    logging.info(f"{key}.{sub_key}: {sub_value}")
+                    logging.info(f"Publishing: {key}.{sub_key}: {sub_value}")
             else:
-                logging.info(f"{key}: {value}")
+                logging.info(f"Publishing: {key}: {value}")
 
-    def run(self, interval, max_samples, debug=False):
+    def run(self, plugin, interval, max_samples, debug=False):
         samples_published = 0
 
         while max_samples == 0 or samples_published < max_samples:
@@ -32,7 +32,7 @@ class SystemMonitor:
             if debug:
                 self.debug_publish(metrics)
             else:
-                self.publish_metrics(metrics)
+                self.publish_metrics(plugin, metrics)
             samples_published += 1
 
     def debug_publish(self, metrics):
@@ -54,10 +54,11 @@ def main():
     )
 
     # Load monitoring units
-    monitoring_units = [monitor_units.ProcStatMU(), monitor_units.ProcMeminfoMU()]
+    monitoring_units = [monitor_units.ProcStatMU(), monitor_units.ProcMeminfoMU(), monitor_units.SysBusI2CMU()]
 
-    monitor = SystemMonitor(monitoring_units)
-    monitor.run(interval=args.interval, max_samples=args.samples, debug=args.debug)
+    with Plugin() as plugin:
+        monitor = SystemMonitor(monitoring_units)
+        monitor.run(plugin, interval=args.interval, max_samples=args.samples, debug=args.debug)
 
 if __name__ == "__main__":
     main()
