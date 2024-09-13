@@ -1,0 +1,20 @@
+name: "Sage Performance Monitor"
+description: "A filesystem based performance monitor"
+version: "0.1.0"
+authors: "Cameron F. Durbin <cfd@uoregon.edu>"
+keywords: "performance monitor"
+collaborators: ""
+funding: ""
+license: ""
+homepage: ""
+source:
+  architectures:
+    - "linux/arm64"
+  url: "https://github.com/PlatinumCD/perf-mon"
+  branch: main
+
+inputs:
+- id: "interval"
+  type: "float"
+- id: "samples"
+  type: "int"
