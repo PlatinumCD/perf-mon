@@ -45,7 +45,7 @@ class ProcStatMU(MonitorUnit):
         # Compute delta state
         cpu_values = {}
         for cpu in self.cpus: 
-            key_name = f'perf.stat.proc.{cpu}'
+            key_name = f'perf.proc.stat.{cpu}'
             prev_metrics = self.prev_cpu_metrics[cpu]
             curr_metrics = curr_state[cpu]
             cpu_values[key_name] = [curr - prev for prev, curr in zip(prev_metrics, curr_metrics)]
