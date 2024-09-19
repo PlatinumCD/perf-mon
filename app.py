@@ -23,7 +23,7 @@ class SystemMonitor:
                     plugin.publish(topic, sub_value)
             else:
                 logging.info(f"Publishing: {key}: {value}")
-                plugin.publish(key, sub_value)
+                plugin.publish(key, value)
 
     def run(self, plugin, interval, max_samples, debug=False):
         samples_published = 0
